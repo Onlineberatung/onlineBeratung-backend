@@ -1,0 +1,229 @@
+version: '3.7'
+services:
+    openldap:
+      container_name: openldap
+      image: osixia/openldap:1.2.2
+      restart: on-failure
+      ports:
+        - 389:389
+      env_file:
+        - OpenLDAP/OpenLDAP.env
+      networks:
+        - ldap_network
+      volumes:
+        - openldap_data:/var/lib/ldap
+        - ./OpenLDAP/slapd.d:/etc/ldap/slapd.d
+        - ./OpenLDAP/config:/cob-config
+        - /etc/localtime:/etc/localtime:ro
+    mariadb:
+      container_name: mariadb
+      image: mariadb:10.3.3
+      restart: on-failure
+      ports:
+        - 3306:3306
+      env_file:
+        - MariaDB/MariaDB.env
+      networks:
+        - database_network
+      volumes:
+        - ./MariaDB/init.sql:/docker-entrypoint-initdb.d/init.sql
+        - mariadb_data:/var/lib/mysql
+        - ./MariaDB/config:/etc/mysql/conf.d
+        - /etc/localtime:/etc/localtime:ro
+    adminer:
+      container_name: adminer
+      image: adminer:4.6.3
+      restart: on-failure
+      depends_on:
+        - mariadb
+      env_file:
+        - Adminer/Adminer.env
+      networks:
+        - database_network
+        - frontend_network
+      volumes:
+        - /etc/localtime:/etc/localtime:ro
+    keycloak:
+        container_name: keycloak
+        image: jboss/keycloak:4.4.0.Final
+        restart: on-failure
+        depends_on:
+          - mariadb
+        env_file:
+          - Keycloak/Keycloak.env
+        networks:
+          - database_network
+          - frontend_network
+          - ldap_network
+        volumes: 
+          - ./Keycloak/caritas-theme:/opt/jboss/keycloak/themes/caritas-theme
+          - /etc/localtime:/etc/localtime:ro
+    mongodb:
+        container_name: mongodb
+        image: mongo:3.4.5
+        command: --storageEngine mmapv1
+        restart: on-failure
+        env_file:
+          - mongoDB/mongoDB.env
+        networks:
+          - rocket_database_network
+        volumes:
+          - ./mongoDB/init-nosqlclient-user.js:/docker-entrypoint-initdb.d/init-nosqlclient-user.js
+          - ./mongoDB/init-rocketchat-user.js:/setup/init-rocketchat-user.js
+          - mongodb_data:/data/db
+          - mongodb_configdb:/data/configdb
+          - /etc/localtime:/etc/localtime:ro
+    nosqlclient:
+        container_name: nosqlclient
+        image: mongoclient/mongoclient:2.2.0
+        restart: on-failure
+        depends_on:
+          - mongodb
+        env_file:
+            - Nosqlclient/Nosqlclient.env
+        ports:
+          - 3001:3000
+        networks:
+          - rocket_database_network
+          - frontend_network
+        volumes:
+          - /etc/localtime:/etc/localtime:ro
+    rocketchat:
+        container_name: rocketchat
+        image: rocketchat/rocket.chat:0.74.3
+        restart: on-failure
+        depends_on:
+          - mongodb
+        env_file:
+          - Rocket.Chat/Rocket.Chat.env
+        ports:
+          - 3000:3000
+        networks:
+          - rocket_database_network
+          - frontend_network
+          - ldap_network
+        volumes:
+          - ./Rocket.Chat/avatar_uploads:/app/uploads
+          - /etc/localtime:/etc/localtime:ro
+          - ./Rocket.Chat/user_uploads:/app/user_uploads
+    userservice:
+        container_name: userservice
+        image: <image_server_url>/userservice:$USER_SERVICE_VERSION
+        restart: on-failure
+        depends_on:
+          - rocketchat
+        networks:
+          - database_network
+          - frontend_network
+          - service_network
+        volumes:
+          - ./UserService/log:/log
+          - ./UserService/import:/import
+          - userservice_tmp:/tmp
+          - /etc/localtime:/etc/localtime:ro
+        env_file:
+          - ./UserService/UserService.env
+        extra_hosts:
+          - "<app_domain>:<internal_server_ip_address>"
+    agencyservice:
+        container_name: agencyservice
+        image: <image_server_url>/agencyservice:$AGENCY_SERVICE_VERSION
+        networks:
+          - database_network
+          - frontend_network
+          - service_network
+        volumes:
+          - ./AgencyService/log:/log
+          - agencyservice_tmp:/tmp
+          - /etc/localtime:/etc/localtime:ro
+        env_file:
+          - ./AgencyService/AgencyService.env
+        extra_hosts:
+          - "<app_domain>:<internal_server_ip_address>"
+    messageservice:
+        container_name: messageservice
+        image: <image_server_url>/messageservice:$MESSAGE_SERVICE_VERSION
+        restart: on-failure
+        depends_on:
+          - rocketchat
+        networks:
+          - database_network
+          - frontend_network
+          - service_network
+        volumes:
+          - ./MessageService/log:/log
+          - messageservice_tmp:/tmp
+          - /etc/localtime:/etc/localtime:ro
+        env_file:
+          - ./MessageService/MessageService.env
+        extra_hosts:
+          - "<app_domain>:<internal_server_ip_address>"
+    mailservice:
+      container_name: mailservice
+      image: <image_server_url>/mailservice:$MAIL_SERVICE_VERSION
+      restart: on-failure
+      networks:
+        - service_network
+      volumes:
+        - ./MailService/log:/log
+        - mailservice_tmp:/tmp
+        - /etc/localtime:/etc/localtime:ro
+      env_file:
+        - ./MailService/MailService.env
+      extra_hosts:
+        - "<app_domain>:<internal_server_ip_address>"
+    frontend:
+        container_name: frontend
+        image: <image_server_url>/frontend:$FRONTEND_VERSION
+        restart: on-failure
+        volumes:
+        - ./frontend/log:/var/log/nginx
+        - /etc/localtime:/etc/localtime:ro
+        networks:
+          - frontend_network
+    proxy:
+        container_name: nginx
+        image: <image_server_url>/nginx:$NGINX_SERVICE_VERSION
+        restart: on-failure
+        env_file:
+          - nginx/nginx.env
+        ports:
+          - 80:80
+          - 443:443
+          - 3002:3002
+        volumes:
+          - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+          - ./nginx/conf/ip-restrictions.conf:/etc/nginx/ip-restrictions.conf
+          - ./nginx/conf/server.conf:/etc/nginx/server.conf
+          - ./nginx/conf/server-ssl.conf:/etc/nginx/server-ssl.conf
+          - ./nginx/conf/security-headers.conf:/etc/nginx/security-headers.conf
+          - ./nginx/conf/adminer.conf:/etc/nginx/adminer.conf
+          - ./nginx/log:/var/log/nginx
+          - ./nginx/www:/usr/share/nginx/html
+          - ./nginx/ssl:/etc/nginx/ssl
+          - /etc/localtime:/etc/localtime:ro
+          - ./nginx/conf/locations:/etc/nginx/locations
+          - ./nginx/conf/nginx-logrotate:/etc/nginx-logrotate
+        networks:
+          - frontend_network
+        depends_on:
+          - adminer
+          - nosqlclient
+          - rocketchat
+          - frontend
+networks:
+  database_network:
+  rocket_database_network:
+  frontend_network:
+  ldap_network:
+  service_network:
+volumes:
+  mariadb_data:
+  mongodb_data:
+  mongodb_configdb:
+  rocketchat_data:
+  openldap_data:
+  userservice_tmp:
+  agencyservice_tmp:
+  messageservice_tmp:
+  mailservice_tmp:

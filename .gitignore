@@ -1,0 +1,9 @@
+/AgencyService/log
+/UserService/log
+/MessageService/log
+/MailService/log
+/nginx/log
+/frontend/log
+www
+/OpenLDAP/slapd.d
+/Rocket.Chat/avatar_uploads

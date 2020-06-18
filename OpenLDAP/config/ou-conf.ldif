@@ -1,0 +1,7 @@
+dn: ou=cob,dc=caritas,dc=de
+objectClass: organizationalUnit
+ou: cob
+
+dn: ou=users,ou=cob,dc=caritas,dc=de
+objectClass: organizationalUnit
+ou: users

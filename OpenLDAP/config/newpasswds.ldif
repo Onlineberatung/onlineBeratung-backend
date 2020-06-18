@@ -1,0 +1,11 @@
+dn: olcDatabase={0}config,cn=config
+#olcRootDN: cn=admin,cn=config
+changetype: modify
+replace: olcRootPW
+olcRootPW: {SSHA}
+
+dn: olcDatabase={1}mdb,cn=config
+#olcRootDN: cn=admin,dc=caritas,dc=de
+changetype: modify
+replace: olcRootPW
+olcRootPW: {SSHA}

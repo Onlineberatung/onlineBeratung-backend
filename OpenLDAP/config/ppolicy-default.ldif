@@ -1,0 +1,7 @@
+dn: cn=ppolicy,dc=caritas,dc=de
+objectClass: device
+objectClass: pwdPolicyChecker
+objectClass: pwdPolicy
+cn: ppolicy
+olcPPolicyHashCleartext: TRUE
+pwdAttribute: userPassword
