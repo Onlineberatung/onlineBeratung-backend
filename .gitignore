@@ -7,3 +7,4 @@
 www
 /OpenLDAP/slapd.d
 /Rocket.Chat/avatar_uploads
+/node_modules
