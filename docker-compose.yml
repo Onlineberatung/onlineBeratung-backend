@@ -172,6 +172,23 @@ services:
         - ./MailService/MailService.env
       extra_hosts:
         - "<app_domain>:<internal_server_ip_address>"
+    uploadservice:
+      container_name: uploadservice
+      image: <image_server_url>/uploadservice:$UPLOAD_SERVICE_VERSION
+      restart: on-failure
+      depends_on:
+        - rocketchat
+      networks:
+        - frontend_network
+        - service_network
+      volumes:
+        - ./UploadService/log:/log
+        - uploadservice_tmp:/tmp
+        - /etc/localtime:/etc/localtime:ro
+      env_file:
+        - ./UploadService/UploadService.env
+      extra_hosts:
+        - "<app_domain>:<internal_server_ip_address>"
     frontend:
         container_name: frontend
         image: <image_server_url>/frontend:$FRONTEND_VERSION
@@ -227,3 +244,4 @@ volumes:
   agencyservice_tmp:
   messageservice_tmp:
   mailservice_tmp:
+  uploadservice_tmp:

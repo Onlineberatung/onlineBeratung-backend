@@ -2,6 +2,7 @@
 /UserService/log
 /MessageService/log
 /MailService/log
+/UploadService/log
 /nginx/log
 /frontend/log
 www
