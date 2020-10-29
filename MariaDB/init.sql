@@ -15,7 +15,7 @@ FLUSH PRIVILEGES;
 
 CREATE USER IF NOT EXISTS 'messageservice'@'%' IDENTIFIED BY 'messageservice';
 CREATE DATABASE IF NOT EXISTS messageservice CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-GRANT SELECT ON messageservice.* TO 'messageservice'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON messageservice.* TO 'messageservice'@'%';
 FLUSH PRIVILEGES;
 
 CREATE USER IF NOT EXISTS 'liquibase'@'%' IDENTIFIED BY 'liquibase';
