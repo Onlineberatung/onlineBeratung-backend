@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/compare/v1.2.0...v1.2.1) (2020-10-29)
+
+## [1.2.0](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/compare/v1.1.1...v1.2.0) (2020-10-29)
+
+
+### Features
+
+* adapt liveservice config ([375c7c8](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/375c7c8389aed2919f6b9b6b737eeca46f9ccb4d))
+* add messageservice db privileges ([2ae4a0f](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/2ae4a0f36c58f30974f968c027e42106630926df))
+* added rate limiting for websocket and file upload calls ([cfb2632](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/cfb26323efd691734fdf534aa6fcfe212bc7328a))
+* added upgrade headers needed for websocket connection ([a44286b](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/a44286b2991224719f7c4d46932b461fc4dca175))
+* extend init.sql for messageservice database ([2b42d98](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/2b42d98423f7fdf3eefca9058e704c5205cdc337))
+* integrate live messaging ([273de70](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/273de700a5e73fc7e80c5127b211cbe32b9f54ae))
+* integrate new live service ([ad729d6](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/ad729d685e730dfc2731662fab7cb48bcbb4303f))
+
+
+### Bug Fixes
+
+* added missing file download path to whitelist ([7db8efd](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/7db8efde135942affa2f603a25889025359cf43a))
+* changed path to be case sensitive ([707b52a](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/707b52aa7aecd1127ada73f5e642bf1a15de9d2d))
+* corrected whitelisting for rocket.chat and keycloak endpoints ([33521a7](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/33521a7006cdf85637a376b8403d2b9be06ed49e))
+
 ### [1.1.1](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/compare/v1.1.0...v1.1.1) (2020-07-29)
 
 ## 1.1.0 (2020-07-29)

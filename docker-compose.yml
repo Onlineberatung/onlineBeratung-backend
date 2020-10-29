@@ -108,7 +108,7 @@ services:
           - ./Rocket.Chat/user_uploads:/app/user_uploads
     userservice:
         container_name: userservice
-        image: <image_server_url>/userservice:$USER_SERVICE_VERSION
+        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-userservice/userservice-image:$USER_SERVICE_VERSION
         restart: on-failure
         depends_on:
           - rocketchat
@@ -127,7 +127,7 @@ services:
           - "<app_domain>:<internal_server_ip_address>"
     agencyservice:
         container_name: agencyservice
-        image: <image_server_url>/agencyservice:$AGENCY_SERVICE_VERSION
+        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-agencyservice/agencyservice-image:$AGENCY_SERVICE_VERSION
         networks:
           - database_network
           - frontend_network
@@ -142,7 +142,7 @@ services:
           - "<app_domain>:<internal_server_ip_address>"
     messageservice:
         container_name: messageservice
-        image: <image_server_url>/messageservice:$MESSAGE_SERVICE_VERSION
+        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-messageservice/messageservice-image:$MESSAGE_SERVICE_VERSION
         restart: on-failure
         depends_on:
           - rocketchat
@@ -160,7 +160,7 @@ services:
           - "<app_domain>:<internal_server_ip_address>"
     mailservice:
       container_name: mailservice
-      image: <image_server_url>/mailservice:$MAIL_SERVICE_VERSION
+      image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-mailservice/mailservice-image:$MAIL_SERVICE_VERSION
       restart: on-failure
       networks:
         - service_network
@@ -174,7 +174,7 @@ services:
         - "<app_domain>:<internal_server_ip_address>"
     uploadservice:
       container_name: uploadservice
-      image: <image_server_url>/uploadservice:$UPLOAD_SERVICE_VERSION
+      image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-uploadservice/uploadservice-image:$UPLOAD_SERVICE_VERSION
       restart: on-failure
       depends_on:
         - rocketchat
@@ -189,9 +189,22 @@ services:
         - ./UploadService/UploadService.env
       extra_hosts:
         - "<app_domain>:<internal_server_ip_address>"
+    liveservice:
+      container_name: liveservice
+      image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-liveservice/liveservice-image:$LIVE_SERVICE_VERSION
+      restart: "no"
+      networks:
+        - frontend_network
+        - service_network
+      volumes:
+        - ./LiveService/log:/log
+      env_file:
+        - ./LiveService/LiveService.env
+      extra_hosts:
+        - "<app_domain>:<internal_server_ip_address>"
     frontend:
         container_name: frontend
-        image: <image_server_url>/frontend:$FRONTEND_VERSION
+        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-frontend/frontend-image:$FRONTEND_VERSION
         restart: on-failure
         volumes:
         - ./frontend/log:/var/log/nginx
@@ -200,7 +213,7 @@ services:
           - frontend_network
     proxy:
         container_name: nginx
-        image: <image_server_url>/nginx:$NGINX_SERVICE_VERSION
+        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-nginx/nginx-image:$NGINX_SERVICE_VERSION
         restart: on-failure
         env_file:
           - nginx/nginx.env
@@ -245,3 +258,4 @@ volumes:
   messageservice_tmp:
   mailservice_tmp:
   uploadservice_tmp:
+  liveservice_tmp:
