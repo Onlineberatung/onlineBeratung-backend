@@ -17,7 +17,7 @@ services:
         - /etc/localtime:/etc/localtime:ro
     mariadb:
       container_name: mariadb
-      image: mariadb:10.3.3
+      image: mariadb:10.5.6
       restart: on-failure
       ports:
         - 3306:3306
@@ -32,7 +32,7 @@ services:
         - /etc/localtime:/etc/localtime:ro
     adminer:
       container_name: adminer
-      image: adminer:4.6.3
+      image: adminer:4.7.7
       restart: on-failure
       depends_on:
         - mariadb
@@ -75,7 +75,7 @@ services:
           - /etc/localtime:/etc/localtime:ro
     nosqlclient:
         container_name: nosqlclient
-        image: mongoclient/mongoclient:2.2.0
+        image: mongoclient/mongoclient:4.0.1
         restart: on-failure
         depends_on:
           - mongodb
