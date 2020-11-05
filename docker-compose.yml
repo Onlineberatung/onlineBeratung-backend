@@ -2,7 +2,7 @@ version: '3.7'
 services:
     openldap:
       container_name: openldap
-      image: osixia/openldap:1.2.2
+      image: osixia/openldap:1.4.0
       restart: on-failure
       ports:
         - 389:389
