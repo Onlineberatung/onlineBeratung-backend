@@ -45,7 +45,7 @@ services:
         - /etc/localtime:/etc/localtime:ro
     keycloak:
         container_name: keycloak
-        image: jboss/keycloak:4.4.0.Final
+        image: jboss/keycloak:11.0.2
         restart: on-failure
         depends_on:
           - mariadb
