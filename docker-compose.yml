@@ -60,7 +60,7 @@ services:
           - /etc/localtime:/etc/localtime:ro
     mongodb:
         container_name: mongodb
-        image: mongo:3.4.5
+        image: mongo:4.0.5
         command: --storageEngine mmapv1
         restart: on-failure
         env_file:
@@ -70,6 +70,8 @@ services:
         volumes:
           - ./mongoDB/init-nosqlclient-user.js:/docker-entrypoint-initdb.d/init-nosqlclient-user.js
           - ./mongoDB/init-rocketchat-user.js:/setup/init-rocketchat-user.js
+          - ./mongoDB/init-oplog-user.js:/setup/init-oplog-user.js
+          - ./mongoDB/init-replica-set.js:/setup/init-replica-set.js
           - mongodb_data:/data/db
           - mongodb_configdb:/data/configdb
           - /etc/localtime:/etc/localtime:ro
@@ -90,7 +92,7 @@ services:
           - /etc/localtime:/etc/localtime:ro
     rocketchat:
         container_name: rocketchat
-        image: rocketchat/rocket.chat:0.74.3
+        image: rocketchat/rocket.chat:3.7.1
         restart: on-failure
         depends_on:
           - mongodb
