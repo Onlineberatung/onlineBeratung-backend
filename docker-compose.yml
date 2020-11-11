@@ -13,7 +13,7 @@ services:
       volumes:
         - openldap_data:/var/lib/ldap
         - ./OpenLDAP/slapd.d:/etc/ldap/slapd.d
-        - ./OpenLDAP/config:/cob-config
+        - ./OpenLDAP/config:/ob-config
         - /etc/localtime:/etc/localtime:ro
     mariadb:
       container_name: mariadb
