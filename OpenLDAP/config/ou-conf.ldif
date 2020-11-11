@@ -1,7 +1,7 @@
-dn: ou=cob,dc=caritas,dc=de
+dn: ou=ob,dc=onlineberatung,dc=de
 objectClass: organizationalUnit
-ou: cob
+ou: ob
 
-dn: ou=users,ou=cob,dc=caritas,dc=de
+dn: ou=users,ou=ob,dc=onlineberatung,dc=de
 objectClass: organizationalUnit
 ou: users
