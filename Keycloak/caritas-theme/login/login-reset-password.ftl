@@ -10,7 +10,7 @@
         <form id="kc-reset-password-form" class="${properties.kcFormClass!}" action="${url.loginAction}" method="post">
             <div class="${properties.kcFormGroupClass!}">
                 <div class="${properties.kcInputWrapperClass!}">
-                    <input type="text" id="username" name="username" class="${properties.kcInputClass!}" placeholder="${msg("usernameOrEmail")}" autofocus/>
+                    <input type="text" id="username" name="username" class="${properties.kcInputClass!}" placeholder="${msg("email")}" autofocus/>
                 </div>
             </div>
 
