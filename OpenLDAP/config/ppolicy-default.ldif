@@ -1,4 +1,4 @@
-dn: cn=ppolicy,dc=caritas,dc=de
+dn: cn=ppolicy,dc=onlineberatung,dc=de
 objectClass: device
 objectClass: pwdPolicyChecker
 objectClass: pwdPolicy

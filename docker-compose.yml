@@ -2,7 +2,7 @@ version: '3.7'
 services:
     openldap:
       container_name: openldap
-      image: osixia/openldap:1.2.2
+      image: osixia/openldap:1.4.0
       restart: on-failure
       ports:
         - 389:389
@@ -13,11 +13,11 @@ services:
       volumes:
         - openldap_data:/var/lib/ldap
         - ./OpenLDAP/slapd.d:/etc/ldap/slapd.d
-        - ./OpenLDAP/config:/cob-config
+        - ./OpenLDAP/config:/ob-config
         - /etc/localtime:/etc/localtime:ro
     mariadb:
       container_name: mariadb
-      image: mariadb:10.3.3
+      image: mariadb:10.5.6
       restart: on-failure
       ports:
         - 3306:3306
@@ -32,7 +32,7 @@ services:
         - /etc/localtime:/etc/localtime:ro
     adminer:
       container_name: adminer
-      image: adminer:4.6.3
+      image: adminer:4.7.7
       restart: on-failure
       depends_on:
         - mariadb
@@ -45,7 +45,7 @@ services:
         - /etc/localtime:/etc/localtime:ro
     keycloak:
         container_name: keycloak
-        image: jboss/keycloak:4.4.0.Final
+        image: jboss/keycloak:11.0.2
         restart: on-failure
         depends_on:
           - mariadb
@@ -60,7 +60,7 @@ services:
           - /etc/localtime:/etc/localtime:ro
     mongodb:
         container_name: mongodb
-        image: mongo:3.4.5
+        image: mongo:4.0.5
         command: --storageEngine mmapv1
         restart: on-failure
         env_file:
@@ -70,12 +70,14 @@ services:
         volumes:
           - ./mongoDB/init-nosqlclient-user.js:/docker-entrypoint-initdb.d/init-nosqlclient-user.js
           - ./mongoDB/init-rocketchat-user.js:/setup/init-rocketchat-user.js
+          - ./mongoDB/init-oplog-user.js:/setup/init-oplog-user.js
+          - ./mongoDB/init-replica-set.js:/setup/init-replica-set.js
           - mongodb_data:/data/db
           - mongodb_configdb:/data/configdb
           - /etc/localtime:/etc/localtime:ro
     nosqlclient:
         container_name: nosqlclient
-        image: mongoclient/mongoclient:2.2.0
+        image: mongoclient/mongoclient:4.0.1
         restart: on-failure
         depends_on:
           - mongodb
@@ -90,7 +92,7 @@ services:
           - /etc/localtime:/etc/localtime:ro
     rocketchat:
         container_name: rocketchat
-        image: rocketchat/rocket.chat:0.74.3
+        image: rocketchat/rocket.chat:3.7.1
         restart: on-failure
         depends_on:
           - mongodb
