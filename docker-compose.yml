@@ -183,6 +183,7 @@ services:
       networks:
         - frontend_network
         - service_network
+        - database_network
       volumes:
         - ./UploadService/log:/log
         - uploadservice_tmp:/tmp
