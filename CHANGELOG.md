@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/compare/v1.2.1...v2.0.0) (2020-12-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* mariadb database upgrade requires to upgrade also existig tables. Use docker exec -it mariadb bash -c "mysql_upgrade -u<USER_NAME> -p<PASSOWRD>" to perform the upgrade on the started new mariadb container
+
+### Features
+
+* add messageservice properties ([c3918c4](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/c3918c487d48735f1b575866c48144b8765e1a5d))
+* added insert permission for agencyservice database user ([aaf09d4](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/aaf09d49f314eab8bdf9f1ca55dcc67d67837b95))
+* increment rate limit for subscription.read call ([f30b628](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/f30b628f06c065091e2b48929c0ec66e22315cb2))
+* integrate agency admin service path ([1c389af](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/1c389af1f9bde0ede7bf32987f09cc736c0aafe6))
+* integrate uploadservice file upload restriction ([da8380c](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/da8380c02f5a57cae9a777c52f4eaeadd3aab810))
+* integrate userservice admin service path ([d6f6eaa](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/d6f6eaa9b5a140910047059ec5a8620068e35878))
+* restrict release action to branches starting with release ([2e42179](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/2e42179614fcba66f6cd1dc6f0c5971baf4cfc4d))
+* update mariadb, adminer and mongoclient ([2448e1f](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/2448e1fc6a77cc79b7fb44cc971fd72c9b9d7542))
+* update versions of rocket.chat and mongodb ([c7990e6](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/c7990e6338fd5434b34a3ac89fb3f24768887c35))
+
+
+### Bug Fixes
+
+* correct proxy path ([63ba5e2](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/63ba5e2020e0358df44bca1a5d12aaf708ee0d2a))
+* removed old keycloak version from resources path for password reset styles ([cf99421](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/cf99421d38d54389d9081f501de247c9e2e65985))
+* removed username from keycloak password reset theme ([3e492fc](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/commit/3e492fc58daba56ce006f81a157846d18a892c21))
+
 ### [1.2.1](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/compare/v1.2.0...v1.2.1) (2020-10-29)
 
 ## [1.2.0](https://github.com/virtualidentityag/caritas-onlineBeratung-backend/compare/v1.1.1...v1.2.0) (2020-10-29)
