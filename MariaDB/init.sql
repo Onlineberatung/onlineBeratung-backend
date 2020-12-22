@@ -10,7 +10,7 @@ FLUSH PRIVILEGES;
 
 CREATE USER IF NOT EXISTS 'agencyservice'@'%' IDENTIFIED BY 'agencyservice';
 CREATE DATABASE IF NOT EXISTS agencyservice CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-GRANT SELECT, INSERT, UPDATE ON agencyservice.* TO 'agencyservice'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON agencyservice.* TO 'agencyservice'@'%';
 FLUSH PRIVILEGES;
 
 CREATE USER IF NOT EXISTS 'messageservice'@'%' IDENTIFIED BY 'messageservice';
