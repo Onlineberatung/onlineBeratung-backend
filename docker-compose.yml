@@ -205,6 +205,19 @@ services:
         - ./LiveService/LiveService.env
       extra_hosts:
         - "<app_domain>:<internal_server_ip_address>"
+    videoservice:
+        container_name: videoservice
+        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-videoservice/videoservice-image:$VIDEO_SERVICE_VERSION
+        restart: "no"
+        networks:
+          - frontend_network
+          - service_network
+        volumes:
+          - ./VideoService/log:/log
+        env_file:
+          - ./VideoService/VideoService.env
+        extra_hosts:
+          - "<app_domain>:<internal_server_ip_address>"
     frontend:
         container_name: frontend
         image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-frontend/frontend-image:$FRONTEND_VERSION
