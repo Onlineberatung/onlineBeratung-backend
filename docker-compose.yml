@@ -214,6 +214,8 @@ services:
           - service_network
         volumes:
           - ./VideoService/log:/log
+          - videoservice_tmp:/tmp
+          - /etc/localtime:/etc/localtime:ro
         env_file:
           - ./VideoService/VideoService.env
         extra_hosts:
