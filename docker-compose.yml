@@ -277,3 +277,4 @@ volumes:
   mailservice_tmp:
   uploadservice_tmp:
   liveservice_tmp:
+  videoservice_tmp:
