@@ -121,6 +121,7 @@ services:
         volumes:
           - ./UserService/log:/log
           - ./UserService/import:/import
+          - ./UserService/firebase:/firebase
           - userservice_tmp:/tmp
           - /etc/localtime:/etc/localtime:ro
         env_file:
