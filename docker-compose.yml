@@ -122,6 +122,7 @@ services:
           - ./UserService/log:/log
           - ./UserService/import:/import
           - ./UserService/firebase:/firebase
+          - ./UserService/report:/report
           - userservice_tmp:/tmp
           - /etc/localtime:/etc/localtime:ro
         env_file:
