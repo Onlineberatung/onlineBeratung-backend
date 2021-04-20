@@ -57,6 +57,7 @@ services:
           - ldap_network
         volumes: 
           - ./Keycloak/caritas-theme:/opt/jboss/keycloak/themes/caritas-theme
+          - ./Keycloak/logging/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
           - /etc/localtime:/etc/localtime:ro
     mongodb:
         container_name: mongodb
