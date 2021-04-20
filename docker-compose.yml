@@ -250,8 +250,6 @@ services:
           - ./nginx/conf/locations:/etc/nginx/locations
           - ./nginx/conf/server:/etc/nginx/server
           - ./nginx/conf/nginx-logrotate:/etc/nginx-logrotate
-          - ./<path_to_pem_file>:/etc/nginx/ssl/<pem_file_name>.cer
-          - ./<path_to_key_file>:/etc/nginx/ssl/<key_file_name>.key
         networks:
           - frontend_network
         depends_on:
