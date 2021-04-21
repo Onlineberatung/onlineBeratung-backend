@@ -89,7 +89,7 @@
   <profile>
     <subsystem xmlns="urn:jboss:domain:logging:8.0">
       <console-handler name="CONSOLE">
-        <filter-spec value="substituteAll(&quot;ipAddress.* &quot;,&quot;&quot;)"/>
+        <filter-spec value="substituteAll(&quot;(ipAddress.* )|(from ip .*)&quot;,&quot;&quot;)"/>
         <formatter>
           <named-formatter name="COLOR-PATTERN"/>
         </formatter>
