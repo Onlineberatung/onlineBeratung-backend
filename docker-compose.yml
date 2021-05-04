@@ -110,7 +110,7 @@ services:
           - ./Rocket.Chat/user_uploads:/app/user_uploads
     userservice:
         container_name: userservice
-        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-userservice/userservice-image:$USER_SERVICE_VERSION
+        image: $USER_SERVICE_IMAGE:$USER_SERVICE_VERSION
         restart: on-failure
         depends_on:
           - rocketchat
@@ -129,7 +129,7 @@ services:
           - "<app_domain>:<internal_server_ip_address>"
     agencyservice:
         container_name: agencyservice
-        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-agencyservice/agencyservice-image:$AGENCY_SERVICE_VERSION
+        image: $AGENCY_SERVICE_IMAGE:$AGENCY_SERVICE_VERSION
         networks:
           - database_network
           - frontend_network
@@ -144,7 +144,7 @@ services:
           - "<app_domain>:<internal_server_ip_address>"
     messageservice:
         container_name: messageservice
-        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-messageservice/messageservice-image:$MESSAGE_SERVICE_VERSION
+        image: $MESSAGE_SERVICE_IMAGE:$MESSAGE_SERVICE_VERSION
         restart: on-failure
         depends_on:
           - rocketchat
@@ -162,7 +162,7 @@ services:
           - "<app_domain>:<internal_server_ip_address>"
     mailservice:
       container_name: mailservice
-      image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-mailservice/mailservice-image:$MAIL_SERVICE_VERSION
+      image: $MAIL_SERVICE_IMAGE:$MAIL_SERVICE_VERSION
       restart: on-failure
       networks:
         - service_network
@@ -176,7 +176,7 @@ services:
         - "<app_domain>:<internal_server_ip_address>"
     uploadservice:
       container_name: uploadservice
-      image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-uploadservice/uploadservice-image:$UPLOAD_SERVICE_VERSION
+      image: $UPLOAD_SERVICE_IMAGE:$UPLOAD_SERVICE_VERSION
       restart: on-failure
       depends_on:
         - rocketchat
@@ -194,29 +194,47 @@ services:
         - "<app_domain>:<internal_server_ip_address>"
     liveservice:
       container_name: liveservice
-      image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-liveservice/liveservice-image:$LIVE_SERVICE_VERSION
+      image: $LIVE_SERVICE_IMAGE:$LIVE_SERVICE_VERSION
       restart: "no"
       networks:
         - frontend_network
         - service_network
       volumes:
         - ./LiveService/log:/log
+        - liveservice_tmp:/tmp
+        - /etc/localtime:/etc/localtime:ro
       env_file:
         - ./LiveService/LiveService.env
       extra_hosts:
         - "<app_domain>:<internal_server_ip_address>"
+    consultingtypeservice:
+      container_name: consultingtypeservice
+      image: CONSULTING_TYPE_SERVICE_IMAGE:CONSULTING_TYPE_SERVICE_VERSION
+      restart: "no"
+      networks:
+        - frontend_network
+        - service_network
+      volumes:
+        - ./ConsultingTypeService/consulting-type-settings:/consulting-type-settings
+        - ./ConsultingTypeService/log:/log
+        - consultingtypeservice_tmp:/tmp
+        - /etc/localtime:/etc/localtime:ro
+      env_file:
+        - ./ConsultingTypeService/ConsultingTypeService.env
+      extra_hosts:
+        - "<app_domain>:<internal_server_ip_address>"
     frontend:
-        container_name: frontend
-        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-frontend/frontend-image:$FRONTEND_VERSION
-        restart: on-failure
-        volumes:
+      container_name: frontend
+      image: $FRONTEND_IMAGE:$FRONTEND_VERSION
+      restart: on-failure
+      volumes:
         - ./frontend/log:/var/log/nginx
         - /etc/localtime:/etc/localtime:ro
-        networks:
+      networks:
           - frontend_network
     proxy:
         container_name: nginx
-        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-nginx/nginx-image:$NGINX_SERVICE_VERSION
+        image: $NGINX_SERVICE_IMAGE:$NGINX_SERVICE_VERSION
         restart: on-failure
         env_file:
           - nginx/nginx.env
@@ -262,3 +280,4 @@ volumes:
   mailservice_tmp:
   uploadservice_tmp:
   liveservice_tmp:
+  consultingtypeservice_tmp:
