@@ -225,20 +225,20 @@ services:
       extra_hosts:
         - "<app_domain>:<internal_server_ip_address>"
     videoservice:
-        container_name: videoservice
-        image: VIDEO_SERVICE_IMAGE:$VIDEO_SERVICE_VERSION
-        restart: "no"
-        networks:
-          - frontend_network
-          - service_network
-        volumes:
-          - ./VideoService/log:/log
-          - videoservice_tmp:/tmp
-          - /etc/localtime:/etc/localtime:ro
-        env_file:
-          - ./VideoService/VideoService.env
-        extra_hosts:
-          - "<app_domain>:<internal_server_ip_address>"
+      container_name: videoservice
+      image: VIDEO_SERVICE_IMAGE:$VIDEO_SERVICE_VERSION
+      restart: "no"
+      networks:
+        - frontend_network
+        - service_network
+      volumes:
+        - ./VideoService/log:/log
+        - videoservice_tmp:/tmp
+        - /etc/localtime:/etc/localtime:ro
+      env_file:
+        - ./VideoService/VideoService.env
+      extra_hosts:
+        - "<app_domain>:<internal_server_ip_address>"
     frontend:
       container_name: frontend
       image: $FRONTEND_IMAGE:$FRONTEND_VERSION
