@@ -57,6 +57,7 @@ services:
           - ldap_network
         volumes: 
           - ./Keycloak/caritas-theme:/opt/jboss/keycloak/themes/caritas-theme
+          - ./Keycloak/logging/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
           - /etc/localtime:/etc/localtime:ro
     mongodb:
         container_name: mongodb
@@ -83,8 +84,6 @@ services:
           - mongodb
         env_file:
             - Nosqlclient/Nosqlclient.env
-        ports:
-          - 3001:3000
         networks:
           - rocket_database_network
           - frontend_network
@@ -98,8 +97,6 @@ services:
           - mongodb
         env_file:
           - Rocket.Chat/Rocket.Chat.env
-        ports:
-          - 3000:3000
         networks:
           - rocket_database_network
           - frontend_network
@@ -122,6 +119,7 @@ services:
           - ./UserService/log:/log
           - ./UserService/import:/import
           - ./UserService/firebase:/firebase
+          - ./UserService/report:/report
           - userservice_tmp:/tmp
           - /etc/localtime:/etc/localtime:ro
         env_file:
@@ -257,19 +255,17 @@ services:
         ports:
           - 80:80
           - 443:443
+          - 3000:3000
+          - 3001:3001
           - 3002:3002
         volumes:
-          - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
-          - ./nginx/conf/ip-restrictions.conf:/etc/nginx/ip-restrictions.conf
-          - ./nginx/conf/server.conf:/etc/nginx/server.conf
-          - ./nginx/conf/server-ssl.conf:/etc/nginx/server-ssl.conf
-          - ./nginx/conf/security-headers.conf:/etc/nginx/security-headers.conf
-          - ./nginx/conf/adminer.conf:/etc/nginx/adminer.conf
+          - ./nginx/conf:/etc/nginx
           - ./nginx/log:/var/log/nginx
           - ./nginx/www:/usr/share/nginx/html
           - ./nginx/ssl:/etc/nginx/ssl
           - /etc/localtime:/etc/localtime:ro
           - ./nginx/conf/locations:/etc/nginx/locations
+          - ./nginx/conf/server:/etc/nginx/server
           - ./nginx/conf/nginx-logrotate:/etc/nginx-logrotate
         networks:
           - frontend_network
