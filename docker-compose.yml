@@ -221,6 +221,22 @@ services:
           - ./VideoService/VideoService.env
         extra_hosts:
           - "<app_domain>:<internal_server_ip_address>"
+    consultingtypeservice:
+      container_name: consultingtypeservice
+      image: $CONSULTING_TYPE_SERVICE_IMAGE:$CONSULTING_TYPE_SERVICE_VERSION
+      restart: "no"
+      networks:
+        - frontend_network
+        - service_network
+      volumes:
+        - ./ConsultingTypeService/log:/log
+        - ./ConsultingTypeService/consulting-type-settings:/consulting-type-settings
+        - consultingtypeservice_tmp:/tmp
+        - /etc/localtime:/etc/localtime:ro
+      env_file:
+        - ./ConsultingTypeService/ConsultingTypeService.env
+      extra_hosts:
+        - "<app_domain>:<internal_server_ip_address>"
     frontend:
         container_name: frontend
         image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-frontend/frontend-image:$FRONTEND_VERSION
@@ -277,3 +293,4 @@ volumes:
   uploadservice_tmp:
   liveservice_tmp:
   videoservice_tmp:
+  consultingtypeservice_tmp:
