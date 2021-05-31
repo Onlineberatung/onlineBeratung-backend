@@ -208,7 +208,7 @@ services:
         - "<app_domain>:<internal_server_ip_address>"
     consultingtypeservice:
       container_name: consultingtypeservice
-      image: CONSULTING_TYPE_SERVICE_IMAGE:CONSULTING_TYPE_SERVICE_VERSION
+      image: $CONSULTING_TYPE_SERVICE_IMAGE:$CONSULTING_TYPE_SERVICE_VERSION
       restart: "no"
       networks:
         - frontend_network
@@ -224,7 +224,7 @@ services:
         - "<app_domain>:<internal_server_ip_address>"
     videoservice:
       container_name: videoservice
-      image: VIDEO_SERVICE_IMAGE:$VIDEO_SERVICE_VERSION
+      image: $VIDEO_SERVICE_IMAGE:$VIDEO_SERVICE_VERSION
       restart: "no"
       networks:
         - frontend_network
