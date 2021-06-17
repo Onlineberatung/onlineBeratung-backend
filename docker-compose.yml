@@ -17,7 +17,7 @@ services:
         - /etc/localtime:/etc/localtime:ro
     mariadb:
       container_name: mariadb
-      image: mariadb:10.5.6
+      image: mariadb:10.5.10
       restart: on-failure
       ports:
         - 3306:3306
@@ -32,7 +32,7 @@ services:
         - /etc/localtime:/etc/localtime:ro
     adminer:
       container_name: adminer
-      image: adminer:4.7.7
+      image: adminer:4.8.1
       restart: on-failure
       depends_on:
         - mariadb
@@ -45,7 +45,7 @@ services:
         - /etc/localtime:/etc/localtime:ro
     keycloak:
         container_name: keycloak
-        image: jboss/keycloak:11.0.2
+        image: jboss/keycloak:13.0.1
         restart: on-failure
         depends_on:
           - mariadb
@@ -91,7 +91,7 @@ services:
           - /etc/localtime:/etc/localtime:ro
     rocketchat:
         container_name: rocketchat
-        image: rocketchat/rocket.chat:3.7.1
+        image: rocketchat/rocket.chat:3.14.4
         restart: on-failure
         depends_on:
           - mongodb
