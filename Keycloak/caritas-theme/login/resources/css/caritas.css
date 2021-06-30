@@ -152,3 +152,7 @@ body {
 .centerText {
     text-align: center;
 }
+
+.pf-c-alert__icon {
+    display: inline-block;
+}
