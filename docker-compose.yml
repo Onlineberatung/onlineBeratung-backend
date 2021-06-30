@@ -17,7 +17,7 @@ services:
         - /etc/localtime:/etc/localtime:ro
     mariadb:
       container_name: mariadb
-      image: mariadb:10.5.6
+      image: mariadb:10.5.10
       restart: on-failure
       ports:
         - 3306:3306
@@ -32,7 +32,7 @@ services:
         - /etc/localtime:/etc/localtime:ro
     adminer:
       container_name: adminer
-      image: adminer:4.7.7
+      image: adminer:4.8.1
       restart: on-failure
       depends_on:
         - mariadb
@@ -45,7 +45,7 @@ services:
         - /etc/localtime:/etc/localtime:ro
     keycloak:
         container_name: keycloak
-        image: jboss/keycloak:11.0.2
+        image: jboss/keycloak:13.0.1
         restart: on-failure
         depends_on:
           - mariadb
@@ -57,6 +57,7 @@ services:
           - ldap_network
         volumes: 
           - ./Keycloak/caritas-theme:/opt/jboss/keycloak/themes/caritas-theme
+          - ./Keycloak/logging/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
           - /etc/localtime:/etc/localtime:ro
     mongodb:
         container_name: mongodb
@@ -83,8 +84,6 @@ services:
           - mongodb
         env_file:
             - Nosqlclient/Nosqlclient.env
-        ports:
-          - 3001:3000
         networks:
           - rocket_database_network
           - frontend_network
@@ -92,14 +91,12 @@ services:
           - /etc/localtime:/etc/localtime:ro
     rocketchat:
         container_name: rocketchat
-        image: rocketchat/rocket.chat:3.7.1
+        image: rocketchat/rocket.chat:3.14.4
         restart: on-failure
         depends_on:
           - mongodb
         env_file:
           - Rocket.Chat/Rocket.Chat.env
-        ports:
-          - 3000:3000
         networks:
           - rocket_database_network
           - frontend_network
@@ -110,7 +107,7 @@ services:
           - ./Rocket.Chat/user_uploads:/app/user_uploads
     userservice:
         container_name: userservice
-        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-userservice/userservice-image:$USER_SERVICE_VERSION
+        image: $USER_SERVICE_IMAGE:$USER_SERVICE_VERSION
         restart: on-failure
         depends_on:
           - rocketchat
@@ -121,6 +118,8 @@ services:
         volumes:
           - ./UserService/log:/log
           - ./UserService/import:/import
+          - ./UserService/firebase:/firebase
+          - ./UserService/report:/report
           - userservice_tmp:/tmp
           - /etc/localtime:/etc/localtime:ro
         env_file:
@@ -129,7 +128,7 @@ services:
           - "<app_domain>:<internal_server_ip_address>"
     agencyservice:
         container_name: agencyservice
-        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-agencyservice/agencyservice-image:$AGENCY_SERVICE_VERSION
+        image: $AGENCY_SERVICE_IMAGE:$AGENCY_SERVICE_VERSION
         networks:
           - database_network
           - frontend_network
@@ -144,7 +143,7 @@ services:
           - "<app_domain>:<internal_server_ip_address>"
     messageservice:
         container_name: messageservice
-        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-messageservice/messageservice-image:$MESSAGE_SERVICE_VERSION
+        image: $MESSAGE_SERVICE_IMAGE:$MESSAGE_SERVICE_VERSION
         restart: on-failure
         depends_on:
           - rocketchat
@@ -162,7 +161,7 @@ services:
           - "<app_domain>:<internal_server_ip_address>"
     mailservice:
       container_name: mailservice
-      image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-mailservice/mailservice-image:$MAIL_SERVICE_VERSION
+      image: $MAIL_SERVICE_IMAGE:$MAIL_SERVICE_VERSION
       restart: on-failure
       networks:
         - service_network
@@ -176,7 +175,7 @@ services:
         - "<app_domain>:<internal_server_ip_address>"
     uploadservice:
       container_name: uploadservice
-      image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-uploadservice/uploadservice-image:$UPLOAD_SERVICE_VERSION
+      image: $UPLOAD_SERVICE_IMAGE:$UPLOAD_SERVICE_VERSION
       restart: on-failure
       depends_on:
         - rocketchat
@@ -194,48 +193,79 @@ services:
         - "<app_domain>:<internal_server_ip_address>"
     liveservice:
       container_name: liveservice
-      image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-liveservice/liveservice-image:$LIVE_SERVICE_VERSION
+      image: $LIVE_SERVICE_IMAGE:$LIVE_SERVICE_VERSION
       restart: "no"
       networks:
         - frontend_network
         - service_network
       volumes:
         - ./LiveService/log:/log
+        - liveservice_tmp:/tmp
+        - /etc/localtime:/etc/localtime:ro
       env_file:
         - ./LiveService/LiveService.env
       extra_hosts:
         - "<app_domain>:<internal_server_ip_address>"
+    consultingtypeservice:
+      container_name: consultingtypeservice
+      image: $CONSULTING_TYPE_SERVICE_IMAGE:$CONSULTING_TYPE_SERVICE_VERSION
+      restart: "no"
+      networks:
+        - frontend_network
+        - service_network
+      volumes:
+        - ./ConsultingTypeService/consulting-type-settings:/consulting-type-settings
+        - ./ConsultingTypeService/log:/log
+        - consultingtypeservice_tmp:/tmp
+        - /etc/localtime:/etc/localtime:ro
+      env_file:
+        - ./ConsultingTypeService/ConsultingTypeService.env
+      extra_hosts:
+        - "<app_domain>:<internal_server_ip_address>"
+    videoservice:
+      container_name: videoservice
+      image: $VIDEO_SERVICE_IMAGE:$VIDEO_SERVICE_VERSION
+      restart: "no"
+      networks:
+        - frontend_network
+        - service_network
+      volumes:
+        - ./VideoService/log:/log
+        - videoservice_tmp:/tmp
+        - /etc/localtime:/etc/localtime:ro
+      env_file:
+        - ./VideoService/VideoService.env
+      extra_hosts:
+        - "<app_domain>:<internal_server_ip_address>"
     frontend:
-        container_name: frontend
-        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-frontend/frontend-image:$FRONTEND_VERSION
-        restart: on-failure
-        volumes:
+      container_name: frontend
+      image: $FRONTEND_IMAGE:$FRONTEND_VERSION
+      restart: on-failure
+      volumes:
         - ./frontend/log:/var/log/nginx
         - /etc/localtime:/etc/localtime:ro
-        networks:
+      networks:
           - frontend_network
     proxy:
         container_name: nginx
-        image: docker.pkg.github.com/caritasdeutschland/caritas-onlineberatung-nginx/nginx-image:$NGINX_SERVICE_VERSION
+        image: $NGINX_SERVICE_IMAGE:$NGINX_SERVICE_VERSION
         restart: on-failure
         env_file:
           - nginx/nginx.env
         ports:
           - 80:80
           - 443:443
+          - 3000:3000
+          - 3001:3001
           - 3002:3002
         volumes:
-          - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
-          - ./nginx/conf/ip-restrictions.conf:/etc/nginx/ip-restrictions.conf
-          - ./nginx/conf/server.conf:/etc/nginx/server.conf
-          - ./nginx/conf/server-ssl.conf:/etc/nginx/server-ssl.conf
-          - ./nginx/conf/security-headers.conf:/etc/nginx/security-headers.conf
-          - ./nginx/conf/adminer.conf:/etc/nginx/adminer.conf
+          - ./nginx/conf:/etc/nginx
           - ./nginx/log:/var/log/nginx
           - ./nginx/www:/usr/share/nginx/html
           - ./nginx/ssl:/etc/nginx/ssl
           - /etc/localtime:/etc/localtime:ro
           - ./nginx/conf/locations:/etc/nginx/locations
+          - ./nginx/conf/server:/etc/nginx/server
           - ./nginx/conf/nginx-logrotate:/etc/nginx-logrotate
         networks:
           - frontend_network
@@ -262,3 +292,5 @@ volumes:
   mailservice_tmp:
   uploadservice_tmp:
   liveservice_tmp:
+  consultingtypeservice_tmp:
+  videoservice_tmp:

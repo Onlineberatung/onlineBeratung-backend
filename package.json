@@ -2,18 +2,33 @@
   "name": "caritas-online-beratung-backend",
   "version": "2.0.0",
   "scripts": {
-    "release": "standard-version"
+    "release": "standard-version",
+    "start": "run-s start:*",
+    "start:up": "docker-compose up -d",
+    "start:stop-proxy-and-services": "docker-compose stop proxy userservice messageservice uploadservice",
+    "start:wait-on-rocketchat": "wait-on http://caritas.local:3000",
+    "start:start-services": "docker-compose start userservice messageservice uploadservice",
+    "start:start-proxy": "docker-compose start proxy",
+    "start:wait-on-keycloak": "wait-on http://caritas.local/auth/",
+    "start:wait-on-userservice": "wait-on http://caritas.local/service/users/docs/swagger-ui.html",
+    "start:wait-on-messageservice": "wait-on http://caritas.local/service/messages/docs/swagger-ui.html",
+    "start:wait-on-uploadservice": "wait-on http://caritas.local/service/uploads/docs/swagger-ui.html",
+    "start:frontend-run-mk": "node masterkey.js",
+    "down": "docker-compose down"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/virtualidentityag/caritas-onlineBeratung-backend.git"
   },
   "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
-    "cz-conventional-changelog": "^3.2.0",
-    "husky": "^4.2.5",
-    "standard-version": "^9.0.0"
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "dotenv": "^8.2.0",
+    "husky": "^6.0.0",
+    "npm-run-all": "^4.1.5",
+    "standard-version": "^9.3.0",
+    "wait-on": "^6.0.0"
   },
   "config": {
     "commitizen": {
