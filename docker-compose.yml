@@ -237,6 +237,17 @@ services:
         - ./VideoService/VideoService.env
       extra_hosts:
         - "<app_domain>:<internal_server_ip_address>"
+    rabbitmq:
+      container_name: rabbitmq
+      image: rabbitmq:3.8.18-alpine
+      restart: on-failure
+      ports:
+        - '5672:5672'
+      networks:
+        - service_network
+      volumes:
+        - ./RabbitMQ/config/:/etc/rabbitmq/
+        - ./RabbitMQ/logs/:/var/log/rabbitmq/
     frontend:
       container_name: frontend
       image: $FRONTEND_IMAGE:$FRONTEND_VERSION
