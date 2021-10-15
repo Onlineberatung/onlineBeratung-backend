@@ -253,7 +253,7 @@ services:
         - "<app_domain>:<internal_server_ip_address>"
     rabbitmq:
       container_name: rabbitmq
-      hostname: <app-domain>
+      hostname: <app_domain>
       image: rabbitmq:3.8.18-alpine
       restart: on-failure
       ports:
