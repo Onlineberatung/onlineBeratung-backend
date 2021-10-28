@@ -70,9 +70,7 @@ services:
           - rocket_database_network
         volumes:
           - ./mongoDB/init-nosqlclient-user.js:/docker-entrypoint-initdb.d/init-nosqlclient-user.js
-          - ./mongoDB/init-rocketchat-user.js:/setup/init-rocketchat-user.js
-          - ./mongoDB/init-oplog-user.js:/setup/init-oplog-user.js
-          - ./mongoDB/init-replica-set.js:/setup/init-replica-set.js
+          - ./mongoDB/setup:/setup
           - mongodb_data:/data/db
           - mongodb_configdb:/data/configdb
           - /etc/localtime:/etc/localtime:ro
@@ -237,6 +235,36 @@ services:
         - ./VideoService/VideoService.env
       extra_hosts:
         - "<app_domain>:<internal_server_ip_address>"
+    statisticsservice:
+      container_name: statisticsservice
+      image: $STATISTICS_SERVICE_IMAGE:$STATISTICS_SERVICE_VERSION
+      restart: "no"
+      networks:
+        - frontend_network
+        - service_network
+        - rocket_database_network
+      volumes:
+        - ./StatisticsService/log:/log
+        - statisticsservice_tmp:/tmp
+        - /etc/localtime:/etc/localtime:ro
+      env_file:
+        - ./StatisticsService/StatisticsService.env
+      extra_hosts:
+        - "<app_domain>:<internal_server_ip_address>"
+    rabbitmq:
+      container_name: rabbitmq
+      hostname: <app_domain>
+      image: rabbitmq:3.8.18-alpine
+      restart: on-failure
+      ports:
+        - '5672:5672'
+        - '15672:15672'
+      networks:
+        - service_network
+      volumes:
+        - ./RabbitMQ/config/:/etc/rabbitmq/
+        - ./RabbitMQ/logs/:/var/log/rabbitmq/
+        - ./RabbitMQ/mnesia/:/var/lib/rabbitmq/mnesia
     frontend:
       container_name: frontend
       image: $FRONTEND_IMAGE:$FRONTEND_VERSION
@@ -294,3 +322,4 @@ volumes:
   liveservice_tmp:
   consultingtypeservice_tmp:
   videoservice_tmp:
+  statisticsservice_tmp:
