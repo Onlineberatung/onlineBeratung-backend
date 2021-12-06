@@ -269,6 +269,50 @@ services:
         - ./RabbitMQ/config/:/etc/rabbitmq/
         - ./RabbitMQ/logs/:/var/log/rabbitmq/
         - ./RabbitMQ/mnesia/:/var/lib/rabbitmq/mnesia
+    elasticsearch:
+      container_name: elasticsearch
+      image: elasticsearch:${ELK_VERSION}
+      hostname: ${APP_DOMAIN}
+      volumes:
+        - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+        - elasticsearch:/usr/share/elasticsearch/data:z
+      ports:
+        - "9200:9200"
+        - "9300:9300"
+      env_file:
+        - ./elasticsearch/elasticsearch.env
+      environment:
+        - "discovery.type=single-node"
+      networks:
+        - elk_network
+    logstash:
+      container_name: logstash
+      image: logstash:${ELK_VERSION}
+      hostname: ${APP_DOMAIN}
+      volumes:
+        - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,z
+        - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,z
+      ports:
+        - "9600:9600"
+        - "8089:8089"
+      env_file:
+        - ./logstash/logstash.env
+      networks:
+        - elk_network
+      depends_on:
+        - elasticsearch
+    kibana:
+      container_name: kibana
+      image: kibana:${ELK_VERSION}
+      hostname: ${APP_DOMAIN}
+      volumes:
+        - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,z
+      ports:
+        - "5601:5601"
+      networks:
+        - elk_network
+      depends_on:
+        - elasticsearch
     frontend:
       container_name: frontend
       image: ${FRONTEND_IMAGE}:$FRONTEND_VERSION
@@ -312,7 +356,10 @@ networks:
   frontend_network:
   ldap_network:
   service_network:
+  elk_network:
+    driver: bridge
 volumes:
+  elasticsearch:
   mariadb_data:
   mongodb_data:
   mongodb_configdb:
