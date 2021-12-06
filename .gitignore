@@ -1,11 +1,16 @@
 /AgencyService/log
+/ConsultingTypeService/log
 /UserService/log
 /MessageService/log
 /MailService/log
 /UploadService/log
+/VideoService/log
 /nginx/log
 /frontend/log
 www
 /OpenLDAP/slapd.d
 /Rocket.Chat/avatar_uploads
+/Rocket.Chat/user_uploads
 /node_modules
+/.idea
+/.env
