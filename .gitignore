@@ -7,6 +7,8 @@
 /VideoService/log
 /nginx/log
 /frontend/log
+/RabbitMQ/logs
+/RabbitMQ/mnesia
 www
 /OpenLDAP/slapd.d
 /Rocket.Chat/avatar_uploads
