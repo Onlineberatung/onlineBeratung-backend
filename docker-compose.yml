@@ -237,22 +237,24 @@ services:
         - ./VideoService/VideoService.env
       extra_hosts:
         - ${APP_DOMAIN}:$APP_IP
-#    statisticsservice:
-#      container_name: statisticsservice
-#      image: ${STATISTICS_SERVICE_IMAGE}:$STATISTICS_SERVICE_VERSION
-#      restart: "no"
-#      networks:
-#        - frontend_network
-#        - service_network
-#        - rocket_database_network
-#      volumes:
-#        - ./StatisticsService/log:/log
-#        - statisticsservice_tmp:/tmp
-#        - /etc/localtime:/etc/localtime:ro
-#      env_file:
-#        - ./StatisticsService/StatisticsService.env
-#      extra_hosts:
-#        - ${APP_DOMAIN}:$APP_IP
+    statisticsservice:
+      container_name: statisticsservice
+      image: ${STATISTICS_SERVICE_IMAGE}:$STATISTICS_SERVICE_VERSION
+      restart: "no"
+      networks:
+        - frontend_network
+        - service_network
+        - rocket_database_network
+      volumes:
+        - ./StatisticsService/log:/log
+        - statisticsservice_tmp:/tmp
+        - /etc/localtime:/etc/localtime:ro
+      env_file:
+        - ./StatisticsService/StatisticsService.env
+      extra_hosts:
+        - ${APP_DOMAIN}:$APP_IP
+      profiles:
+        - donotstart
     rabbitmq:
       container_name: rabbitmq
       hostname: ${APP_DOMAIN}
