@@ -84,8 +84,6 @@ services:
           - mongodb
         env_file:
             - Nosqlclient/Nosqlclient.env
-        ports:
-          - ${NOSQLCLIENT_EXPOSED_PORT}:3000
         networks:
           - rocket_database_network
           - frontend_network
@@ -332,13 +330,13 @@ services:
           - "80:80"
           - "443:443"
           - "3000:3000"
-          - "3001:3001" # not locally
+          - "3001:3001"
           - "3002:3002"
         volumes:
           - ./nginx/conf:/etc/nginx
           - ./nginx/log:/var/log/nginx
           - ./nginx/www:/usr/share/nginx/html
-          - ./nginx/ssl:/etc/nginx/ssl # not locally
+          - ./nginx/ssl:/etc/nginx/ssl
           - /etc/localtime:/etc/localtime:ro
           - ./nginx/conf/locations:/etc/nginx/locations
           - ./nginx/conf/server:/etc/nginx/server
