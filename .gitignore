@@ -1,6 +1,8 @@
 /AgencyService/log
 /ConsultingTypeService/log
+/ConsultingTypeService/consulting-type-settings
 /UserService/log
+/UserService/import
 /MessageService/log
 /MailService/log
 /UploadService/log
