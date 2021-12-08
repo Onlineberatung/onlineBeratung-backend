@@ -292,7 +292,7 @@ services:
         - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,z
         - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,z
       ports:
-        - "9600:9600"
+        - "9600:31311"
         - "8089:8089"
       env_file:
         - ./logstash/logstash.env
