@@ -253,8 +253,6 @@ services:
         - ./StatisticsService/StatisticsService.env
       extra_hosts:
         - ${APP_DOMAIN}:$APP_IP
-      profiles:
-        - donotstart
     rabbitmq:
       container_name: rabbitmq
       hostname: ${APP_DOMAIN}
