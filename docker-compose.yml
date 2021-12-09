@@ -5,7 +5,7 @@ services:
       image: osixia/openldap:1.4.0
       restart: on-failure
       ports:
-        - 389:389
+        - "389:389"
       env_file:
         - OpenLDAP/OpenLDAP.env
       networks:
@@ -20,7 +20,7 @@ services:
       image: mariadb:10.5.10
       restart: on-failure
       ports:
-        - 3306:3306
+        - "3306:3306"
       env_file:
         - MariaDB/MariaDB.env
       networks:
@@ -55,14 +55,16 @@ services:
           - database_network
           - frontend_network
           - ldap_network
-        volumes: 
+        volumes:
           - ./Keycloak/caritas-theme:/opt/jboss/keycloak/themes/caritas-theme
           - ./Keycloak/logging/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
           - /etc/localtime:/etc/localtime:ro
+        extra_hosts:
+          - ${APP_DOMAIN}:$APP_IP
     mongodb:
         container_name: mongodb
         image: mongo:4.0.5
-        command: --storageEngine mmapv1
+        command: ${MONGODB_COMMAND:--storageEngine mmapv1}
         restart: on-failure
         env_file:
           - mongoDB/mongoDB.env
@@ -105,7 +107,7 @@ services:
           - ./Rocket.Chat/user_uploads:/app/user_uploads
     userservice:
         container_name: userservice
-        image: $USER_SERVICE_IMAGE:$USER_SERVICE_VERSION
+        image: ${USER_SERVICE_IMAGE}:$USER_SERVICE_VERSION
         restart: on-failure
         depends_on:
           - rocketchat
@@ -123,10 +125,10 @@ services:
         env_file:
           - ./UserService/UserService.env
         extra_hosts:
-          - "<app_domain>:<internal_server_ip_address>"
+          - ${APP_DOMAIN}:$APP_IP
     agencyservice:
         container_name: agencyservice
-        image: $AGENCY_SERVICE_IMAGE:$AGENCY_SERVICE_VERSION
+        image: ${AGENCY_SERVICE_IMAGE}:$AGENCY_SERVICE_VERSION
         networks:
           - database_network
           - frontend_network
@@ -138,10 +140,10 @@ services:
         env_file:
           - ./AgencyService/AgencyService.env
         extra_hosts:
-          - "<app_domain>:<internal_server_ip_address>"
+          - ${APP_DOMAIN}:$APP_IP
     messageservice:
         container_name: messageservice
-        image: $MESSAGE_SERVICE_IMAGE:$MESSAGE_SERVICE_VERSION
+        image: ${MESSAGE_SERVICE_IMAGE}:$MESSAGE_SERVICE_VERSION
         restart: on-failure
         depends_on:
           - rocketchat
@@ -156,10 +158,10 @@ services:
         env_file:
           - ./MessageService/MessageService.env
         extra_hosts:
-          - "<app_domain>:<internal_server_ip_address>"
+          - ${APP_DOMAIN}:$APP_IP
     mailservice:
       container_name: mailservice
-      image: $MAIL_SERVICE_IMAGE:$MAIL_SERVICE_VERSION
+      image: ${MAIL_SERVICE_IMAGE}:$MAIL_SERVICE_VERSION
       restart: on-failure
       networks:
         - service_network
@@ -170,10 +172,10 @@ services:
       env_file:
         - ./MailService/MailService.env
       extra_hosts:
-        - "<app_domain>:<internal_server_ip_address>"
+        - ${APP_DOMAIN}:$APP_IP
     uploadservice:
       container_name: uploadservice
-      image: $UPLOAD_SERVICE_IMAGE:$UPLOAD_SERVICE_VERSION
+      image: ${UPLOAD_SERVICE_IMAGE}:$UPLOAD_SERVICE_VERSION
       restart: on-failure
       depends_on:
         - rocketchat
@@ -188,10 +190,10 @@ services:
       env_file:
         - ./UploadService/UploadService.env
       extra_hosts:
-        - "<app_domain>:<internal_server_ip_address>"
+        - ${APP_DOMAIN}:$APP_IP
     liveservice:
       container_name: liveservice
-      image: $LIVE_SERVICE_IMAGE:$LIVE_SERVICE_VERSION
+      image: ${LIVE_SERVICE_IMAGE}:$LIVE_SERVICE_VERSION
       restart: "no"
       networks:
         - frontend_network
@@ -203,10 +205,10 @@ services:
       env_file:
         - ./LiveService/LiveService.env
       extra_hosts:
-        - "<app_domain>:<internal_server_ip_address>"
+        - ${APP_DOMAIN}:$APP_IP
     consultingtypeservice:
       container_name: consultingtypeservice
-      image: $CONSULTING_TYPE_SERVICE_IMAGE:$CONSULTING_TYPE_SERVICE_VERSION
+      image: ${CONSULTING_TYPE_SERVICE_IMAGE}:$CONSULTING_TYPE_SERVICE_VERSION
       restart: "no"
       networks:
         - frontend_network
@@ -219,10 +221,10 @@ services:
       env_file:
         - ./ConsultingTypeService/ConsultingTypeService.env
       extra_hosts:
-        - "<app_domain>:<internal_server_ip_address>"
+        - ${APP_DOMAIN}:$APP_IP
     videoservice:
       container_name: videoservice
-      image: $VIDEO_SERVICE_IMAGE:$VIDEO_SERVICE_VERSION
+      image: ${VIDEO_SERVICE_IMAGE}:$VIDEO_SERVICE_VERSION
       restart: "no"
       networks:
         - frontend_network
@@ -234,10 +236,10 @@ services:
       env_file:
         - ./VideoService/VideoService.env
       extra_hosts:
-        - "<app_domain>:<internal_server_ip_address>"
+        - ${APP_DOMAIN}:$APP_IP
     statisticsservice:
       container_name: statisticsservice
-      image: $STATISTICS_SERVICE_IMAGE:$STATISTICS_SERVICE_VERSION
+      image: ${STATISTICS_SERVICE_IMAGE}:$STATISTICS_SERVICE_VERSION
       restart: "no"
       networks:
         - frontend_network
@@ -250,42 +252,91 @@ services:
       env_file:
         - ./StatisticsService/StatisticsService.env
       extra_hosts:
-        - "<app_domain>:<internal_server_ip_address>"
+        - ${APP_DOMAIN}:$APP_IP
     rabbitmq:
       container_name: rabbitmq
-      hostname: <app_domain>
-      image: rabbitmq:3.8.18-alpine
+      hostname: ${APP_DOMAIN}
+      image: rabbitmq:3.9.7-management-alpine
       restart: on-failure
       ports:
         - '5672:5672'
         - '15672:15672'
       networks:
         - service_network
+        - frontend_network
       volumes:
         - ./RabbitMQ/config/:/etc/rabbitmq/
         - ./RabbitMQ/logs/:/var/log/rabbitmq/
         - ./RabbitMQ/mnesia/:/var/lib/rabbitmq/mnesia
+    elasticsearch:
+      container_name: elasticsearch
+      image: elasticsearch:${ELK_VERSION}
+      hostname: ${APP_DOMAIN}
+      volumes:
+        - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,z
+        - elasticsearch:/usr/share/elasticsearch/data:z
+      ports:
+        - "9200:9200"
+        - "9300:9300"
+      env_file:
+        - ./elasticsearch/elasticsearch.env
+      environment:
+        - "discovery.type=single-node"
+      networks:
+        - elk_network
+    logstash:
+      container_name: logstash
+      image: logstash:${ELK_VERSION}
+      hostname: ${APP_DOMAIN}
+      volumes:
+        - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,z
+        - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,z
+      ports:
+        - "9600:31311"
+        - "8089:8089"
+      env_file:
+        - ./logstash/logstash.env
+      networks:
+        - elk_network
+        - frontend_network
+        - service_network
+      depends_on:
+        - elasticsearch
+    kibana:
+      container_name: kibana
+      image: kibana:${ELK_VERSION}
+      hostname: ${APP_DOMAIN}
+      volumes:
+        - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,z
+      ports:
+        - "5601:5601"
+      networks:
+        - elk_network
+        - frontend_network
+      depends_on:
+        - elasticsearch
     frontend:
       container_name: frontend
-      image: $FRONTEND_IMAGE:$FRONTEND_VERSION
+      image: ${FRONTEND_IMAGE}:$FRONTEND_VERSION
       restart: on-failure
       volumes:
         - ./frontend/log:/var/log/nginx
         - /etc/localtime:/etc/localtime:ro
       networks:
-          - frontend_network
+        - frontend_network
     proxy:
         container_name: nginx
-        image: $NGINX_SERVICE_IMAGE:$NGINX_SERVICE_VERSION
+        image: ${NGINX_SERVICE_IMAGE}:$NGINX_SERVICE_VERSION
         restart: on-failure
         env_file:
           - nginx/nginx.env
         ports:
-          - 80:80
-          - 443:443
-          - 3000:3000
-          - 3001:3001
-          - 3002:3002
+          - "80:80"
+          - "443:443"
+          - "3000:3000"
+          - "3001:3001"
+          - "3002:3002"
+          - "3004:3004"
         volumes:
           - ./nginx/conf:/etc/nginx
           - ./nginx/log:/var/log/nginx
@@ -308,7 +359,10 @@ networks:
   frontend_network:
   ldap_network:
   service_network:
+  elk_network:
+    driver: bridge
 volumes:
+  elasticsearch:
   mariadb_data:
   mongodb_data:
   mongodb_configdb:
