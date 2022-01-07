@@ -1,4 +1,11 @@
 version: '3.7'
+
+x-service-logging:
+  &logstash
+  options:
+    gelf-address: "udp://localhost:12201"
+  driver: gelf
+
 services:
     openldap:
       container_name: openldap
@@ -109,6 +116,7 @@ services:
         container_name: userservice
         image: ${USER_SERVICE_IMAGE}:$USER_SERVICE_VERSION
         restart: on-failure
+        logging: *logstash
         depends_on:
           - rocketchat
         networks:
@@ -292,8 +300,9 @@ services:
         - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,z
         - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,z
       ports:
-        - "9600:31311"
+        - "31311:31311"
         - "8089:8089"
+        - "12201:12201/udp"
       env_file:
         - ./logstash/logstash.env
       networks:
@@ -353,6 +362,7 @@ services:
           - nosqlclient
           - rocketchat
           - frontend
+
 networks:
   database_network:
   rocket_database_network:
@@ -361,6 +371,7 @@ networks:
   service_network:
   elk_network:
     driver: bridge
+
 volumes:
   elasticsearch:
   mariadb_data:
