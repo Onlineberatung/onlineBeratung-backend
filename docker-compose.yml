@@ -331,6 +331,7 @@ services:
       volumes:
         - ./frontend/log:/var/log/nginx
         - /etc/localtime:/etc/localtime:ro
+        - ./frontend/incomingCall.mp3:/usr/share/nginx/html/public/assets/audio/incomingCall.mp3
       networks:
         - frontend_network
     proxy:
