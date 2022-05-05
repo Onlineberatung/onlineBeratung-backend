@@ -61,11 +61,11 @@
   <tr>
     <!-- legal links -->
     <td style="padding: 24px 36px; text-align: left;">
-      <a href="https://beratung.diakonie.de/login"
+      <a href="https://beratung.diakonie.de/impressum"
          style="color: #5A2572; text-decoration: none; font-size: 14px; line-height: 20px;">Impressum</a>
       <span style="color: #5A2572; text-decoration: none; font-size: 14px; line-height: 20px;">&nbsp; |
                   &nbsp;</span>
-      <a href="https://beratung.diakonie.de/login"
+      <a href="https://beratung.diakonie.de/datenschutz"
          style="color: #5A2572; text-decoration: none; font-size: 14px; line-height: 20px;">Datenschutz</a>
     </td>
   </tr>
