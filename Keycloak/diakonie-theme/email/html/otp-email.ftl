@@ -46,12 +46,10 @@
             <!-- message -->
             <b>Liebe(r) Benutzer:in,</b>
             <br/><br/>
-            Dein E-Mail-Code lautet <span
+            Ihr E-Mail-Code lautet <span
                 style="color: #5A2572FF"><strong>${kcSanitize(msg("emailCodeBody", otp))?no_esc}</strong></span>
             und ist für <span>${kcSanitize(msg("emailTtlBody", ttl))?no_esc}</span> Minuten
             gültig.
-            <br/><br/>
-            Dein Team des <br/> Online-Beratungsportals der Diakonie
           </td>
         </tr>
       </table>
@@ -61,11 +59,11 @@
   <tr>
     <!-- legal links -->
     <td style="padding: 24px 36px; text-align: left;">
-      <a href="https://beratung.diakonie.de/login"
+      <a href="https://beratung.diakonie.de/impressum"
          style="color: #5A2572; text-decoration: none; font-size: 14px; line-height: 20px;">Impressum</a>
       <span style="color: #5A2572; text-decoration: none; font-size: 14px; line-height: 20px;">&nbsp; |
                   &nbsp;</span>
-      <a href="https://beratung.diakonie.de/login"
+      <a href="https://beratung.diakonie.de/datenschutz"
          style="color: #5A2572; text-decoration: none; font-size: 14px; line-height: 20px;">Datenschutz</a>
     </td>
   </tr>
