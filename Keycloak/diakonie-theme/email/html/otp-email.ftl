@@ -46,12 +46,10 @@
             <!-- message -->
             <b>Liebe(r) Benutzer:in,</b>
             <br/><br/>
-            Dein E-Mail-Code lautet <span
+            Ihr E-Mail-Code lautet <span
                 style="color: #5A2572FF"><strong>${kcSanitize(msg("emailCodeBody", otp))?no_esc}</strong></span>
             und ist für <span>${kcSanitize(msg("emailTtlBody", ttl))?no_esc}</span> Minuten
             gültig.
-            <br/><br/>
-            Dein Team des <br/> Online-Beratungsportals der Diakonie
           </td>
         </tr>
       </table>
