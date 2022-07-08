@@ -20,7 +20,7 @@
                 </div>
 
                 <div id="kc-form-options" class="${properties.kcFormOptionsClass!} kc-form-optionsClass">
-                    <a class="textlink" href="/">${kcSanitize(msg("backToLogin"))?no_esc}</a>
+                    <a class="textlink" href="/login">${kcSanitize(msg("backToLogin"))?no_esc}</a>
                 </div>
             </div>
         </form>
