@@ -47,14 +47,15 @@
             <td cellspacing='0' cellpadding='0' style="padding: 0;" colspan="2">
               <div
                   style="color: #3F373F; margin: 16px; font-size: 16px; line-height: 21px; font-family: 'Open Sans', 'OpenSans', 'Arial', 'sans-serif';">
-                <b>Liebe(r) Benutzer_in,</b>
+                <b>${msg("emailSalutation")}</b>
                 <br/><br/>
-                Ihr E-Mail-Code lautet <span style="color: limegreen"><strong>${kcSanitize(msg("emailCodeBody",otp))?no_esc}</strong></span>
-                und ist für <span>${kcSanitize(msg("emailTtlBody", ttl))?no_esc}</span> Minuten
-                gültig.
+                <#assign otpText="<span style=\"color: limegreen\"><strong>${otp}</strong></span>">
+                <#outputformat "plainText">
+                  ${msg("emailTextBody", otpText, ttl)}
+                </#outputformat>
                 <br/><br/>
-                Liebe Grüße,<br/>
-                Ihr Caritas Team
+                ${msg("emailClosing")}<br/>
+                ${msg("emailSignature")}
                 <br/><br/><br/>
               </div>
             </td>
