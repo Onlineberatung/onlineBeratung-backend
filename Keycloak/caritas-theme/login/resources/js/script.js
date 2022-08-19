@@ -8,7 +8,18 @@ function requestParam(url) {
 }
 
 function changeLocale(url) {
-    let lang = requestParam(url);
+    const lang = requestParam(url);
     document.cookie = "KEYCLOAK_LOCALE=" + lang;
     window.location.href = url
+}
+
+window.onload = function () {
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+
+    if (params.has("init")) {
+        params.delete("init");
+        let urlToGo = url.href.split('?')[0] + "?" + params.toString();
+        changeLocale(urlToGo);
+    }
 }
