@@ -52,7 +52,7 @@
                                 <ul class="${properties.kcLocaleListClass!}">
                                     <#list locale.supported as l>
                                         <li class="${properties.kcLocaleListItemClass!}">
-                                            <a class="${properties.kcLocaleItemClass!}" href="${l.url}">${l.label}</a>
+                                            <a class="${properties.kcLocaleItemClass!}" onclick="changeLocale(`${l.url}`)">${l.label}</a>
                                         </li>
                                     </#list>
                                 </ul>
