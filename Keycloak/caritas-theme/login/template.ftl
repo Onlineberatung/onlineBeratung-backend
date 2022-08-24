@@ -44,7 +44,7 @@
         </div>
         <div class="${properties.kcFormCardClass!}">
             <header class="${properties.kcFormHeaderClass!}">
-                <#if realm.internationalizationEnabled  && locale.supported?size gt 1>
+                <#if false && realm.internationalizationEnabled && locale.supported?size gt 1>
                     <div class="${properties.kcLocaleMainClass!}" id="kc-locale">
                         <div id="kc-locale-wrapper" class="${properties.kcLocaleWrapperClass!}">
                             <div id="kc-locale-dropdown" class="${properties.kcLocaleDropDownClass!}">
