@@ -1,2 +1,5 @@
 <#ftl output_format="plainText">
-${msg("emailTextBody", otp, ttl)}
+${msg("emailSalutation")}\n
+${msg("emailTextBody", otp, ttl)}\n
+${msg("emailSignature1")}
+${msg("emailSignature2")}
