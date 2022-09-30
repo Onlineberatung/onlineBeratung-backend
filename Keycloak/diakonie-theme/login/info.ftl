@@ -17,7 +17,7 @@
                 <p><a href="${actionUri}">${kcSanitize(msg("proceedWithAction"))?no_esc}</a></p>
             </#if>
         </#if>
-        <p class="centerText"><a class="textlink" href="/">${kcSanitize(msg("backToLogin"))?no_esc}</a></p>
+        <p class="centerText"><a class="textlink" href="/login">${kcSanitize(msg("backToLogin"))?no_esc}</a></p>
     </div>
     </#if>
 </@layout.registrationLayout>

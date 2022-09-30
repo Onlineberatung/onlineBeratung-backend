@@ -8,7 +8,7 @@
         <#if realm.password>
             <form id="kc-form-login" onsubmit="login.disabled = true; return true;" action="${url.loginAction}" method="post">
                 <div id="kc-form-options" class="${properties.kcFormOptionsClass!} kc-form-optionsClass">
-                    <a class="textlink" href="/">${kcSanitize(msg("backToLogin"))?no_esc}</a>
+                    <a class="textlink" href="/login">${kcSanitize(msg("backToLogin"))?no_esc}</a>
                 </div>
             </form>
         </#if>
