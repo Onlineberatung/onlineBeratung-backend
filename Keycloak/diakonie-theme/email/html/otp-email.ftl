@@ -44,12 +44,15 @@
           <td cellspacing="0" cellpadding="0" colspan="2"
               style="text-align: left; padding: 36px; color: #3F373F;font-size: 16px; line-height: 24px; font-family: 'Open Sans', 'OpenSans', 'Arial', 'sans-serif';">
             <!-- message -->
-            <b>Liebe(r) Benutzer:in,</b>
+            <b>${msg("emailSalutation")}</b>
             <br/><br/>
-            Ihr E-Mail-Code lautet <span
-                style="color: #5A2572FF"><strong>${kcSanitize(msg("emailCodeBody", otp))?no_esc}</strong></span>
-            und ist für <span>${kcSanitize(msg("emailTtlBody", ttl))?no_esc}</span> Minuten
-            gültig.
+            <#assign otpText="<span style=\"color: #5A2572FF\"><strong>${otp}</strong></span>">
+            <#outputformat "plainText">
+              ${msg("emailTextBody", otpText, ttl)}
+            </#outputformat>
+            <br/><br/>
+            ${msg("emailSignature1")}<br/>
+            ${msg("emailSignature2")}
           </td>
         </tr>
       </table>
